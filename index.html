@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Me</title>
+  <style>
+    body { font-family: Arial; max-width: 600px; margin: 50px auto; padding: 20px; }
+    input, textarea, button { width: 100%; margin: 10px 0; padding: 10px; font-size: 1em; }
+    #status { margin-top: 10px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <h1>Contact Me</h1>
+
+  <form id="contactForm">
+    <input type="text" name="name" placeholder="Your Name" required />
+    <input type="email" name="email" placeholder="Your Email" required />
+    <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+    <button type="submit">Send</button>
+  </form>
+<button onclick="window.location.href='messages.html'">Go to Contact</button>
+  <div id="status"></div>
+
+  <script>
+    const form = document.getElementById('contactForm');
+    const statusDiv = document.getElementById('status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = form.name.value;
+      const email = form.email.value;
+      const message = form.message.value;
+
+      const res = await fetch('https://check-1-8dke.onrender.com/api/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, message })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        statusDiv.textContent = "✅ Message sent successfully!";
+        form.reset();
+      } else {
+        statusDiv.textContent = "❌ Failed: " + data.error;
+      }
+    });
+  </script>
+
+</body>
+</html>

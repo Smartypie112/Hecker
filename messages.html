@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Messages</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .msg { border: 1px solid #ccc; padding: 10px; margin-bottom: 15px; border-radius: 6px; }
+    time { color: #555; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+  <h1>Submitted Messages</h1>
+  <div id="messages">Loading...</div>
+
+  <script>
+    fetch('https://check-1-8dke.onrender.com/api/messages')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('messages');
+        container.innerHTML = data.map(msg => `
+          <div class="msg">
+            <strong>${msg.name}</strong> &lt;${msg.email}&gt;<br>
+            <time>${new Date(msg.time).toLocaleString()}</time>
+            <p>${msg.message}</p>
+          </div>
+        `).join('');
+      })
+      .catch(err => {
+        document.getElementById('messages').textContent = 'Failed to load messages.';
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
